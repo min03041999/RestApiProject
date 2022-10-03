@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
 
 const feedRoutes = require("./routes/feed");
 
@@ -15,10 +16,18 @@ app.use((req, res, next) => {
     "Access-Control-Allow-Methods",
     "GET, POST, PUT, PATCH, DELETE"
   );
-  res.setHeader("Access-Control-Headers", "Content-Type, Authorization");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   next();
 });
 
 app.use("/feed", feedRoutes);
 
-app.listen(3000);
+mongoose
+  .connect(
+    "mongodb+srv://mongo-user:min03041999@cluster-mongo-test.w8oqhwn.mongodb.net/messages?retryWrites=true&w=majority"
+  )
+  .then((result) => {
+    // app.listen(8080);
+    console.log(result);
+  })
+  .catch((err) => console.log(err));
