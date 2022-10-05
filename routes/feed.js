@@ -16,7 +16,7 @@ router.post(
     body("title").trim().isLength({ min: 5 }),
     body("content").trim().isLength({ min: 5 }),
   ],
-  feedController.createPosts
+  feedController.createPost
 );
 
 // GET / feed / post / :postId

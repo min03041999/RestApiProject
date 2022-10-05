@@ -17,27 +17,34 @@ exports.getPosts = (req, res, next) => {
     });
 };
 
-exports.createPosts = (req, res, next) => {
+exports.createPost = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = new Error("Validation failed, entered data is incorrect.");
     error.statusCode = 422;
     throw error;
   }
+  if (!req.file) {
+    const error = new Error("No image provided.");
+    error.statusCode = 422;
+    throw error;
+  }
+
+  const imageUrl = req.file.path;
   const title = req.body.title;
   const content = req.body.content;
+
   const post = new Post({
     title: title,
     content: content,
-    imageUrl: "images/duck.jpg",
+    imageUrl: imageUrl.replace(/[\\]/g, "/"),
     creator: { name: "Alan" },
   });
   post
     .save()
     .then((result) => {
-      console.log(result);
       res.status(201).json({
-        message: "Post created successfully",
+        message: "Post created successfully!",
         post: result,
       });
     })
@@ -58,7 +65,7 @@ exports.getPost = (req, res, next) => {
         error.statusCode = 404;
         throw error;
       }
-      res.status(200).json({ message: "Post fetch.", post: post });
+      res.status(200).json({ message: "Post fetched.", post: post });
     })
     .catch((err) => {
       if (!err.statusCode) {
