@@ -15,6 +15,7 @@ const fileStorage = multer.diskStorage({
     // cb(null, path.join(__dirname, "images"));
   },
   filename: (req, file, cb) => {
+    // Error character as . / - ....
     // cb(null, new Date().toISOString() + "-" + file.originalname);
     // cb(null, Date.now() + path.extname(file.originalname));
     cb(null, uuid() + path.extname(file.originalname));
