@@ -4,13 +4,26 @@ const path = require("path");
 const { validationResult } = require("express-validator");
 const Post = require("../models/post");
 
-// Get
 exports.getPosts = (req, res, next) => {
+  const currentPage = req.query.page || 1;
+  // console.log(currentPage);
+  const perPage = 2;
+  let totalItems;
   Post.find()
+    .countDocuments()
+    .then((count) => {
+      // console.log(count);
+      totalItems = count;
+      return Post.find()
+        .skip((currentPage - 1) * perPage)
+        .limit(perPage);
+    })
     .then((posts) => {
-      res
-        .status(200)
-        .json({ message: "Fetched posts successfully.", posts: posts });
+      res.status(200).json({
+        message: "Fetched posts successfully.",
+        posts: posts,
+        totalItems: totalItems,
+      });
     })
     .catch((err) => {
       if (!err.statusCode) {
@@ -18,6 +31,18 @@ exports.getPosts = (req, res, next) => {
       }
       next(err);
     });
+  // Post.find()
+  //   .then((posts) => {
+  //     res
+  //       .status(200)
+  //       .json({ message: "Fetched posts successfully.", posts: posts });
+  //   })
+  //   .catch((err) => {
+  //     if (!err.statusCode) {
+  //       err.statusCode = 500;
+  //     }
+  //     next(err);
+  //   });
 };
 
 exports.createPost = (req, res, next) => {
@@ -102,12 +127,14 @@ exports.updatePost = (req, res, next) => {
         error.statusCode = 404;
         throw error;
       }
-      if (imageUrl !== post.imageUrl) {
-        clearImage(post.imageUrl);
-      }
       post.title = title;
-      (post.imageUrl = imageUrl.replace(/[\\]/g, "/")), //regex;
-        (post.content = content);
+      if (imageUrl != "undefined") {
+        if (imageUrl !== post.imageUrl) {
+          clearImage(post.imageUrl);
+        }
+        post.imageUrl = imageUrl.replace(/[\\]/g, "/"); //regex;
+      }
+      post.content = content;
       return post.save();
     })
     .then((result) => {
