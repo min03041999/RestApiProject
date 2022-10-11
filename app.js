@@ -8,7 +8,7 @@ const multer = require("multer");
 const feedRoutes = require("./routes/feed");
 
 const app = express();
-const { uuid } = require("uuidv4");
+const { v4: uuid } = require("uuid");
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "images");
