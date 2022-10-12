@@ -5,14 +5,13 @@ const { validationResult } = require("express-validator");
 const Post = require("../models/post");
 
 exports.getPosts = (req, res, next) => {
+  //Show by page
   const currentPage = req.query.page || 1;
-  // console.log(currentPage);
   const perPage = 2;
   let totalItems;
   Post.find()
     .countDocuments()
     .then((count) => {
-      // console.log(count);
       totalItems = count;
       return Post.find()
         .skip((currentPage - 1) * perPage)
@@ -31,6 +30,7 @@ exports.getPosts = (req, res, next) => {
       }
       next(err);
     });
+  // Show all
   // Post.find()
   //   .then((posts) => {
   //     res
