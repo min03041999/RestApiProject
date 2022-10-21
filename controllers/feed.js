@@ -23,7 +23,7 @@ exports.getPosts = (req, res, next) => {
 exports.getPostsPage = (req, res, next) => {
   //Show by page
   const currentPage = req.query.page || 1;
-  const perPage = 2;
+  const perPage = 3;
   let totalItems;
   Post.find()
     .countDocuments()
@@ -80,7 +80,7 @@ exports.createPost = (req, res, next) => {
     title: title,
     content: content,
     imageUrl: imageUrl.replace(/[\\]/g, "/"), //regex,
-    creator: { name: "Alan" },
+    creator: { name: "Titus Cortin" },
   });
   post
     .save()
