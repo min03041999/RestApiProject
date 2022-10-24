@@ -47,7 +47,7 @@ exports.login = (req, res, next) => {
         error.statusCode = 401;
         throw error;
       }
-      console.log(user);
+      // console.log(user);
       loadedUser = user;
       return bcrypt.compare(password, user.password);
     })
@@ -62,9 +62,10 @@ exports.login = (req, res, next) => {
           email: loadedUser.email,
           userId: loadedUser._id.toString(),
         },
-        "someupersecretsecret",
+        "somesupersecretsecret",
         { expiresIn: "1h" }
       );
+      // console.log(token);
       res.status(200).json({ token: token, userId: loadedUser._id.toString() });
     })
     .catch((err) => {
