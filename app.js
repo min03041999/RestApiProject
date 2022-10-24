@@ -37,7 +37,7 @@ const fileFilter = (req, file, cb) => {
 
 // app.use(bodyParser.urlencoded()); // x-www-form-urlencoded <form>
 app.use(bodyParser.json()); // application/json
-app.use(express.json({ limit: "25mb" }));
+// app.use(express.json({ limit: "25mb" }));
 app.use(
   multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
 );
