@@ -5,20 +5,36 @@ const { validationResult } = require("express-validator");
 const Post = require("../models/post");
 const User = require("../models/user");
 
-exports.getPosts = (req, res, next) => {
-  // Show all
-  Post.find()
-    .then((posts) => {
-      res
-        .status(200)
-        .json({ message: "Fetched posts successfully.", posts: posts });
-    })
-    .catch((err) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
-    });
+exports.getPosts = async (req, res, next) => {
+  // Query follow title
+  try {
+    const { title } = req.query;
+    // const query = { title: title };
+    const query = { title: new RegExp(title) };
+    // console.log(query);
+    const posts = await Post.find(query);
+    res
+      .status(200)
+      .json({ message: "Fetched posts successfully.", posts: posts });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+
+  // Post.find()
+  //   .then((posts) => {
+  //     res
+  //       .status(200)
+  //       .json({ message: "Fetched posts successfully.", posts: posts });
+  //   })
+  //   .catch((err) => {
+  //     if (!err.statusCode) {
+  //       err.statusCode = 500;
+  //     }
+  //     next(err);
+  //   });
 };
 
 exports.getPostsPage = async (req, res, next) => {
@@ -206,6 +222,7 @@ exports.deletePost = (req, res, next) => {
       return User.findById(req.userId);
     })
     .then((user) => {
+      // console.log(user);
       user.posts.pull(postId);
       return user.save();
     })
