@@ -11,7 +11,7 @@ const router = express.Router();
 router.get("/posts", feedController.getPosts);
 
 // GET / feed / postspage
-router.get("/postspage", isAuth, feedController.getPostsPage);
+router.get("/postspage", feedController.getPostsPage);
 
 // POST / feed / posts
 router.post(
@@ -25,7 +25,7 @@ router.post(
 );
 
 // GET / feed / post / :postId
-router.get("/post/:postId", isAuth, feedController.getPost);
+router.get("/post/:postId", feedController.getPost);
 
 // PUT / feed / post / :postId
 router.put(

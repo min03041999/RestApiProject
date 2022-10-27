@@ -40,7 +40,7 @@ exports.getPosts = async (req, res, next) => {
 exports.getPostsPage = async (req, res, next) => {
   //Show by page
   const currentPage = req.query.page || 1;
-  const perPage = 3;
+  const perPage = 6;
   try {
     const totalItems = await Post.find().countDocuments();
     const posts = await Post.find()
