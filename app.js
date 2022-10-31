@@ -9,6 +9,7 @@ const feedRoutes = require("./routes/feed");
 const authRoutes = require("./routes/auth");
 
 const app = express();
+const cors = require("cors");
 const { v4: uuid } = require("uuid");
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -34,10 +35,9 @@ const fileFilter = (req, file, cb) => {
     cb(null, false);
   }
 };
-
+// app.use(cors());
 // app.use(bodyParser.urlencoded()); // x-www-form-urlencoded <form>
 app.use(bodyParser.json()); // application/json
-// app.use(express.json({ limit: "25mb" }));
 app.use(
   multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
 );
@@ -69,7 +69,19 @@ mongoose
     "mongodb+srv://mongo-user:min03041999@cluster-mongo-test.w8oqhwn.mongodb.net/messages?retryWrites=true&w=majority"
   )
   .then((result) => {
-    app.listen(8080);
+    // app.listen(8080);
+    // console.log("Server is running on PORT 8080");
+
+    const server = app.listen(8080);
     console.log("Server is running on PORT 8080");
+    const io = require("socket.io")(server, {
+      cors: {
+        origin: "http://localhost:3000",
+        methods: ["GET", "POST"],
+      },
+    });
+    io.on("connection", (socket) => {
+      console.log(socket.adapter.rooms);
+    });
   })
   .catch((err) => console.log(err));
