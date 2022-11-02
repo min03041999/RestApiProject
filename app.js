@@ -9,7 +9,7 @@ const feedRoutes = require("./routes/feed");
 const authRoutes = require("./routes/auth");
 
 const app = express();
-const cors = require("cors");
+// const cors = require("cors");
 const { v4: uuid } = require("uuid");
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -74,12 +74,7 @@ mongoose
 
     const server = app.listen(8080);
     console.log("Server is running on PORT 8080");
-    const io = require("socket.io")(server, {
-      cors: {
-        origin: "http://localhost:3000",
-        methods: ["GET", "POST"],
-      },
-    });
+    const io = require("./socket").init(server);
     io.on("connection", (socket) => {
       console.log(socket.adapter.rooms);
     });
